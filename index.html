@@ -313,46 +313,50 @@
     }
 
     /* АДАПТИВНОСТЬ */
-    @media (max-width: 768px) {
-      .header-top {
-        padding: 6px 0;
-        font-size: 0.8rem;
-      }
-      .header-info {
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-      }
-      .header-main {
-        padding: 10px 0;
-      }
-      .header-content {
-        flex-direction: column;
-        gap: 16px;
-      }
-      .nav-menu ul {
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .header-buttons {
-        width: 100%;
-        justify-content: center;
-      }
-      .btn {
-        width: 100%;
-        max-width: 200px;
-        padding: 10px;
-      }
+   @media (max-width: 768px) {
+  .header-top {
+    padding: 6px 0;
+    font-size: 0.8rem;
+  }
+  .header-info {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  .header-main {
+    padding: 10px 0;
+  }
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center; /* ← центрируем всё содержимое */
+  }
+  .nav-menu ul {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .header-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* ← центрируем кнопки */
+    gap: 12px;
+  }
+  .btn {
+    width: auto; /* ← убираем растягивание */
+    max-width: 200px;
+    padding: 10px 16px; /* чуть компактнее */
+    text-align: center; /* ← гарантируем центрирование текста */
+  }
 
-      .hero h1 { font-size: 2.2rem; }
-      .subtitle { font-size: 1rem; }
-      .section { padding: 50px 0; }
-      .products { grid-template-columns: 1fr; }
-      body {
-        background-attachment: scroll;
-      }
-    }
+  .hero h1 { font-size: 2.2rem; }
+  .subtitle { font-size: 1rem; }
+  .section { padding: 50px 0; }
+  .products { grid-template-columns: 1fr; }
+  body {
+    background-attachment: scroll;
+  }
+}
   </style>
 </head>
 <body>
