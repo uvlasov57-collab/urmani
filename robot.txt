@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://юрмани.рф/sitemap.xml
+
+Host: юрмани.рф
