@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <!-- SEO: обновлённые метатеги -->
   <title>Упаковка в Ростове-на-Дону — Юрмани | Контейнеры, стаканчики, пакеты</title>
-<meta name="description" content="Купить упаковку, одноразовую посуду, бытовую химию и бумажную продукцию в Ростове-на-Дону. Доставка по Ростовской области. Минимальный заказ от 3000 ₽. Работаем с 2019 года.">
+  <meta name="description" content="Купить упаковку, одноразовую посуду, бытовую химию и бумажную продукцию в Ростове-на-Дону. Доставка по Ростовской области. Минимальный заказ от 3000 ₽. Работаем с 2017 года.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#4a7c59">
-<link rel="shortcut icon" href="/favicon.ico">
-<meta name="msapplication-TileColor" content="#4a7c59">
-<meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#4a7c59">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <meta name="msapplication-TileColor" content="#4a7c59">
+  <meta name="theme-color" content="#ffffff">
   <style>
     /* === БАЗА === */
     * {
@@ -63,13 +64,11 @@
     }
 
     /* === НОВЫЙ HEADER === */
-
     .header-top {
       background: #f8f9f5;
       padding: 8px 0;
       border-bottom: 1px solid #eaeaea;
     }
-
     .header-info {
       display: flex;
       align-items: center;
@@ -77,31 +76,26 @@
       font-size: 0.9rem;
       color: #555;
     }
-
     .info-item {
       display: flex;
       align-items: center;
       gap: 4px;
     }
-
     .info-item svg {
       width: 16px;
       height: 16px;
       fill: #555;
     }
-
     .header-main {
       background: white;
       padding: 12px 0;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-
     .header-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
     .logo {
       font-size: 24px;
       font-weight: 800;
@@ -109,7 +103,6 @@
       line-height: 1;
       text-align: center;
     }
-
     .nav-menu ul {
       display: flex;
       list-style: none;
@@ -117,7 +110,6 @@
       margin: 0;
       padding: 0;
     }
-
     .nav-menu a {
       color: var(--text);
       text-decoration: none;
@@ -125,28 +117,22 @@
       font-size: 0.95rem;
       transition: color 0.2s ease;
     }
-
     .nav-menu a:hover {
       color: var(--green);
     }
-
     .header-buttons {
       display: flex;
       gap: 12px;
     }
-
     .btn-secondary {
       background: #e0e0e0;
       color: #333;
     }
-
     .btn-secondary:hover {
       background: #d0d0d0;
     }
 
     /* === ОСТАЛЬНЫЕ СТИЛИ === */
-
-    /* HERO */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -171,8 +157,6 @@
       margin-right: auto;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
-
-    /* СЕКЦИИ */
     .section {
       padding: 80px 0;
       background: rgba(255, 255, 255, 0.85);
@@ -187,8 +171,6 @@
       font-weight: 700;
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
-    /* О КОМПАНИИ */
     #about-products {
       padding: 80px 0;
     }
@@ -212,8 +194,6 @@
       line-height: 1.6;
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
-    /* АССОРТИМЕНТ */
     .products {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -247,8 +227,6 @@
       font-size: 2.5rem;
       color: var(--green);
     }
-
-    /* ПРЕИМУЩЕСТВА */
     .advantages {
       list-style: none;
       max-width: 700px;
@@ -263,8 +241,6 @@
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-
-    /* ДОСТАВКА — ЦЕНТРИРОВАНИЕ */
     #delivery .section h2 {
       text-align: center;
     }
@@ -282,8 +258,6 @@
     .delivery-info strong {
       color: var(--green);
     }
-
-    /* КОНТАКТЫ */
     #contact a {
       color: var(--green);
       text-decoration: none;
@@ -291,8 +265,6 @@
     #contact a:hover {
       text-decoration: underline;
     }
-
-    /* ФОРМА */
     #contact form {
       max-width: 600px;
       margin: 30px auto 0;
@@ -310,8 +282,6 @@
       width: 100%;
       margin-top: 0;
     }
-
-    /* ФУТЕР */
     .footer {
       background: var(--text);
       color: white;
@@ -321,50 +291,49 @@
     }
 
     /* АДАПТИВНОСТЬ */
-   @media (max-width: 768px) {
-  .header-top {
-    padding: 6px 0;
-    font-size: 0.8rem;
-  }
-  .header-info {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
-  .header-main {
-    padding: 10px 0;
-  }
-  .header-content {
-    flex-direction: column;
-    gap: 16px;
-    align-items: center; /* ← центрируем всё содержимое */
-  }
-  .nav-menu ul {
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .header-buttons {
-    width: 100%;
-    display: flex;
-    justify-content: center; /* ← центрируем кнопки */
-    gap: 12px;
-  }
-  .btn {
-    width: auto; /* ← убираем растягивание */
-    max-width: 200px;
-    padding: 10px 16px; /* чуть компактнее */
-    text-align: center; /* ← гарантируем центрирование текста */
-  }
-
-  .hero h1 { font-size: 2.2rem; }
-  .subtitle { font-size: 1rem; }
-  .section { padding: 50px 0; }
-  .products { grid-template-columns: 1fr; }
-  body {
-    background-attachment: scroll;
-  }
-}
+    @media (max-width: 768px) {
+      .header-top {
+        padding: 6px 0;
+        font-size: 0.8rem;
+      }
+      .header-info {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+      .header-main {
+        padding: 10px 0;
+      }
+      .header-content {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+      .nav-menu ul {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .header-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+      .btn {
+        width: auto;
+        max-width: 200px;
+        padding: 10px 16px;
+        text-align: center;
+      }
+      .hero h1 { font-size: 2.2rem; }
+      .subtitle { font-size: 1rem; }
+      .section { padding: 50px 0; }
+      .products { grid-template-columns: 1fr; }
+      body {
+        background-attachment: scroll;
+      }
+    }
   </style>
 </head>
 <body>
@@ -394,7 +363,7 @@
             <a href="https://wa.me/79515344480" target="_blank" style="margin-left: 12px;">
               <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="20" height="20" style="vertical-align: middle;">
             </a>
-            <a href="https://t.me/your_telegram_username" target="_blank" style="margin-left: 8px;">
+            <a href="https://t.me/yurmani_rostov" target="_blank" style="margin-left: 8px;">
               <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width="20" height="20" style="vertical-align: middle;">
             </a>
           </div>
@@ -439,22 +408,22 @@
   <!-- О КОМПАНИИ + АССОРТИМЕНТ -->
   <section id="about-products" class="section">
     <div class="container">
-     <div class="about-box">
-  <h2>О компании</h2>
-  <p>Компания «Юрмани» — надёжный поставщик <strong>одноразовой упаковки, посуды, бытовой химии и бумажной продукции</strong> для бизнеса в Ростовской области. Мы работаем на рынке с 2017 года — уже более 7 лет помогаем кафе, ресторанам, магазинам, службам доставки и предприятиям.</p>
+      <div class="about-box">
+        <h2>О компании</h2>
+        <p>Компания «Юрмани» — надёжный поставщик <strong>одноразовой упаковки, посуды, бытовой химии и бумажной продукции</strong> для бизнеса в Ростовской области. Мы работаем на рынке с 2017 года — уже более 7 лет помогаем кафе, ресторанам, магазинам, службам доставки и предприятиям.</p>
 
-  <p style="margin-top: 16px; color: #555;">
-    В нашем ассортименте:
-    <br>• <strong>Одноразовая упаковка</strong> — контейнеры, пакеты, тортницы, фольга
-    <br>• <strong>Одноразовая посуда</strong> — стаканчики, тарелки, приборы, шейкеры
-    <br>• <strong>Бумажная продукция</strong> — туалетная бумага, салфетки, полотенца
-    <br>• <strong>Бытовая химия</strong> — средства для уборки, гигиены, ухода за телом
-  </p>
+        <p style="margin-top: 16px; color: #555;">
+          В нашем ассортименте:
+          <br>• <strong>Одноразовая упаковка</strong> — контейнеры, пакеты, тортницы, фольга
+          <br>• <strong>Одноразовая посуда</strong> — стаканчики, тарелки, приборы, шейкеры
+          <br>• <strong>Бумажная продукция</strong> — туалетная бумага, салфетки, полотенца
+          <br>• <strong>Бытовая химия</strong> — средства для уборки, гигиены, ухода за телом
+        </p>
 
-  <p style="margin-top: 16px; color: #555;">
-    <strong>Упаковка в Ростове-на-Дону</strong> — наша специализация. Доставляем товары по всей Ростовской области: <strong>Ростов, Таганрог, Шахты, Батайск, Аксай, Новошахтинск, Каменск-Шахтинский</strong>. Работаем напрямую с производителями — без посредников, с минимальным заказом от 3 000 ₽.
-  </p>
-</div>
+        <p style="margin-top: 16px; color: #555;">
+          <strong>Упаковка в Ростове-на-Дону</strong> — наша специализация. Доставляем товары по всей Ростовской области: <strong>Ростов, Таганрог, Шахты, Батайск, Аксай, Новошахтинск, Каменск-Шахтинский</strong>. Работаем напрямую с производителями — без посредников, с минимальным заказом от 3 000 ₽.
+        </p>
+      </div>
 
       <h2>Ассортимент</h2>
       <div class="products">
@@ -503,7 +472,7 @@
         <p><strong>Бесплатная доставка</strong> при заказе от <strong>3 000 рублей</strong>!</p>
         <p>🚚 <strong>По Ростову-на-Дону</strong> — доставляем <strong>ежедневно</strong>.</p>
         <p>📍 <strong>В Аксай, Батайск, Таганрог, Чалтырь</strong> — <strong>3 раза в неделю</strong>.</p>
-        <p> <strong>Доставка по России</strong><br>
+        <p><strong>Доставка по России</strong><br>
         Мы отправляем заказы в любые регионы РФ, включая <strong>ЛНР, ДНР и новые субъекты РФ</strong>.<br>
         Стоимость доставки оплачивается покупателем.</p>
         <p>❗ <strong>Важно:</strong><br>
@@ -548,6 +517,20 @@
       <p>&copy; 2026 ООО «Юрмани». Упаковка для бизнеса в Ростовской области.</p>
     </div>
   </footer>
+
+ <!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=106315549', 'ym');
+
+    ym(106315549, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/106315549" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 
   <script>
     // Плавная прокрутка
