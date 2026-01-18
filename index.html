@@ -493,19 +493,22 @@
     <h2>Получите прайс прямо сейчас</h2>
     <p>Оставьте имя, телефон и тип бизнеса — пришлём прайс мгновенно.</p>
 
-    <!-- Яндекс.Форма в iframe -->
-    <div style="max-width: 650px; margin: 30px auto 0;">
-      <iframe 
-        src="https://forms.yandex.ru/u/6969c97102848f1a2ee3dfc6?iframe=1"
-        frameborder="0"
-        name="ya-form"
-        style="width: 100%; height: 500px; border: none; display: block;"
-        allowfullscreen>
-      </iframe>
-    </div>
+    <form id="priceForm" style="max-width: 600px; margin: 30px auto 0;">
+      <input type="text" name="name" placeholder="Ваше имя *" required>
+      <input type="tel" name="phone" placeholder="Телефон *" required>
+      
+      <label style="display: block; margin: 16px 0 8px; font-weight: 500;">Вы представляете:</label>
+      <select name="business_type" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Inter', sans-serif; margin-bottom: 16px;">
+        <option value="">Выберите...</option>
+        <option value="Кафе">Кафе</option>
+        <option value="Ресторан">Ресторан</option>
+        <option value="Производство">Производство</option>
+        <option value="Магазин">Магазин</option>
+        <option value="Другое">Другое</option>
+      </select>
 
-    <!-- Скрытая кнопка для скачивания -->
-    <a href="/price.pdf" id="downloadLink" style="display: none;" target="_blank"></a>
+      <button type="submit" class="btn">Получить прайс</button>
+    </form>
 
     <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
       Или свяжитесь напрямую:<br>
@@ -560,5 +563,41 @@
       });
     });
   </script>
+ 
+ <script>
+  document.getElementById('priceForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Собираем данные
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    
+    // URL твоей Яндекс.Формы (заменить на реальный!)
+    const formUrl = https://forms.yandex.ru/u/696cbc481f1eb55ec6dbc9e4/;
+    
+    try {
+      // Отправляем данные в Яндекс.Формы
+      const response = await fetch(formUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        // Успешно отправлено → даём скачать прайс
+        window.open('/price.pdf', '_blank');
+        alert('Спасибо! Прайс уже скачивается.');
+        this.reset();
+      } else {
+        alert('Ошибка отправки. Попробуйте ещё раз.');
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Не удалось отправить заявку. Проверьте интернет.');
+    }
+  });
+</script>
 </body>
 </html>
