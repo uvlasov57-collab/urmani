@@ -488,28 +488,32 @@
   </section>
 
   <!-- КОНТАКТЫ + ФОРМА -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2>Получите прайс прямо сейчас</h2>
-      <p>Оставьте заявку — пришлём актуальный прайс и рассчитаем доставку по Ростовской области.</p>
+<section id="contact" class="section">
+  <div class="container">
+    <h2>Получите прайс прямо сейчас</h2>
+    <p>Оставьте имя, телефон и тип бизнеса — пришлём прайс мгновенно.</p>
 
-      <div style="max-width: 650px; margin: 30px auto 0;">
-        <iframe 
-          src="https://forms.yandex.ru/u/6969c97102848f1a2ee3dfc6?iframe=1"
-          frameborder="0"
-          name="ya-form-6969c97102848f1a2ee3dfc6"
-          style="width: 100%; height: 500px; border: none; display: block;"
-          allowfullscreen>
-        </iframe>
-      </div>
-
-      <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
-        Или свяжитесь напрямую:<br>
-        📞 <a href="tel:+79515344480">+79515344480</a><br>
-        📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
-      </p>
+    <!-- Яндекс.Форма в iframe -->
+    <div style="max-width: 650px; margin: 30px auto 0;">
+      <iframe 
+        src="https://forms.yandex.ru/u/6969c97102848f1a2ee3dfc6?iframe=1"
+        frameborder="0"
+        name="ya-form"
+        style="width: 100%; height: 500px; border: none; display: block;"
+        allowfullscreen>
+      </iframe>
     </div>
-  </section>
+
+    <!-- Скрытая кнопка для скачивания -->
+    <a href="/price.pdf" id="downloadLink" style="display: none;" target="_blank"></a>
+
+    <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
+      Или свяжитесь напрямую:<br>
+      📞 <a href="tel:+79515344480">+79515344480</a><br>
+      📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
+    </p>
+  </div>
+</section>
 
   <!-- ФУТЕР -->
   <footer class="footer">
@@ -531,7 +535,16 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/106315549" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
-
+<script>
+  // Слушаем сообщения от iframe (Яндекс.Формы)
+  window.addEventListener('message', function(event) {
+    // Проверяем, что форма отправлена
+    if (event.data === 'form-success') {
+      // Открываем прайс в новой вкладке
+      window.open('/price.pdf', '_blank');
+    }
+  });
+</script>
   <script>
     // Плавная прокрутка
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
