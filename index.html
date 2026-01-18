@@ -488,36 +488,29 @@
     </div>
   </section>
 
-  <!-- КОНТАКТЫ + ФОРМА -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2>Получите прайс прямо сейчас</h2>
-      <p>Оставьте имя, телефон и тип бизнеса — пришлём прайс мгновенно.</p>
+ <!-- КОНТАКТЫ + ФОРМА -->
+<section id="contact" class="section">
+  <div class="container">
+    <h2>Получите прайс прямо сейчас</h2>
+    <p>Оставьте заявку — пришлём актуальный прайс и рассчитаем доставку.</p>
 
-      <form id="priceForm" style="max-width: 600px; margin: 30px auto 0;">
-        <input type="text" name="name" placeholder="Ваше имя *" required>
-        <input type="tel" name="phone" placeholder="Телефон *" required>
-        
-        <label style="display: block; margin: 16px 0 8px; font-weight: 500;">Вы представляете:</label>
-        <select name="business_type" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Inter', sans-serif; margin-bottom: 16px;">
-          <option value="">Выберите...</option>
-          <option value="Кафе">Кафе</option>
-          <option value="Ресторан">Ресторан</option>
-          <option value="Производство">Производство</option>
-          <option value="Магазин">Магазин</option>
-          <option value="Другое">Другое</option>
-        </select>
-
-        <button type="submit" class="btn">Получить прайс</button>
-      </form>
-
-      <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
-        Или свяжитесь напрямую:<br>
-        📞 <a href="tel:+79515344480">+79515344480</a><br>
-        📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
-      </p>
+    <div style="max-width: 650px; margin: 30px auto 0;">
+      <iframe 
+        src="https://forms.yandex.ru/u/696cbc481f1eb55ec6dbc9e4?iframe=1"
+        frameborder="0"
+        name="ya-form"
+        style="width: 100%; height: 500px; border: none; display: block;"
+        allowfullscreen>
+      </iframe>
     </div>
-  </section>
+
+    <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
+      Или свяжитесь напрямую:<br>
+      📞 <a href="tel:+79515344480">+79515344480</a><br>
+      📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
+    </p>
+  </div>
+</section>
 
   <!-- ФУТЕР -->
   <footer class="footer">
@@ -545,36 +538,8 @@
     <div><img src="https://mc.yandex.ru/watch/106315549" style="position:absolute; left:-9999px;" alt="" /></div>
   </noscript>
   <!-- /Yandex.Metrika counter -->
-
-  <!-- Скрипт отправки формы + скачивания прайса -->
-  <script>
-    document.getElementById('priceForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const formUrl = 'https://forms.yandex.ru/u/696cbc481f1eb55ec6dbc9e4/';
-      const formData = new FormData(this);
-      
-      try {
-        const response = await fetch(formUrl, {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
-        
-        if (response.ok) {
-          window.open('/price.pdf', '_blank');
-          alert('Спасибо! Прайс уже скачивается.');
-          this.reset();
-        } else {
-          alert('Ошибка отправки. Попробуйте ещё раз.');
-        }
-      } catch (error) {
-        alert('Не удалось отправить заявку. Проверьте интернет.');
-      }
-    });
-  </script>
-
-  <!-- Плавная прокрутка -->
+   
+   <!-- Плавная прокрутка -->
   <script>
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
