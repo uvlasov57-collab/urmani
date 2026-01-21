@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- SEO: обновлённые метатеги -->
   <title>Упаковка в Ростове-на-Дону — Юрмани | Контейнеры, стаканчики, пакеты</title>
   <meta name="description" content="Купить упаковку, одноразовую посуду, бытовую химию и бумажную продукцию в Ростове-на-Дону. Доставка по Ростовской области. Минимальный заказ от 3000 ₽. Работаем с 2017 года.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,6 +15,10 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <meta name="msapplication-TileColor" content="#4a7c59">
   <meta name="theme-color" content="#ffffff">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
   <style>
     /* === БАЗА === */
     * {
@@ -291,6 +294,98 @@
       font-size: 0.95rem;
     }
 
+    /* === СТИЛИ ДЛЯ SWIPER === */
+    .top-products-full {
+      padding: 60px 0 !important;
+      background: transparent !important;
+      margin: 0 !important;
+    }
+    .top-products-container {
+      width: 100% !important;
+      max-width: none !important;
+      padding: 0 20px !important;
+    }
+    .swiper {
+      padding: 20px 0;
+      width: 100%;
+    }
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+    }
+    .product-card-wide {
+      width: 260px;
+      max-width: 280px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      min-height: 300px;
+    }
+    .product-card-wide:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .product-image {
+      width: 100%;
+      height: 300px;
+      background: var(--bg-light);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--green);
+      overflow: hidden;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 8px;
+    }
+    .product-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 8px 0;
+      line-height: 1.3;
+    }
+    .product-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+      flex-grow: 1;
+    }
+    .product-desc {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.4;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      flex-grow: 1;
+    }
+    .product-price {
+      margin-top: 10px;
+      font-weight: 700;
+      color: var(--green);
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
     /* АДАПТИВНОСТЬ */
     @media (max-width: 768px) {
       .header-top {
@@ -333,6 +428,10 @@
       .products { grid-template-columns: 1fr; }
       body {
         background-attachment: scroll;
+      }
+      .product-card-wide {
+        width: 220px;
+        min-height: 280px;
       }
     }
   </style>
@@ -383,6 +482,7 @@
           <nav class="nav-menu">
             <ul>
               <li><a href="#about-products">О компании</a></li>
+              <li><a href="#top-products">ТОП-50</a></li>
               <li><a href="#advantages">Преимущества</a></li>
               <li><a href="#delivery">Доставка</a></li>
               <li><a href="#contact">Контакты</a></li>
@@ -452,6 +552,344 @@
     </div>
   </section>
 
+  <!-- ТОП-50 КАРУСЕЛЬ НА ВСЮ ШИРИНУ -->
+  <section id="top-products" class="section top-products-full">
+    <div class="top-products-container">
+      <h2 style="text-align: center; color: var(--green); font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        ТОП популярных товаров в 2025 году
+      </h2>
+      <p style="text-align: center; color: #555; margin-bottom: 30px; font-size: 1.05rem;">
+        Самые востребованные позиции среди наших клиентов — проверено на практике
+      </p>
+
+      <!-- Swiper -->
+      <div class="swiper top-products-swiper">
+        <div class="swiper-wrapper">
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/pr1.jpg" alt="ПЛАСТ 30×40 2гр розовый"></div>
+              <div class="product-title">ПЛАСТ 30×40 2гр розовый</div>
+              <div class="product-content">
+                <div class="product-desc">Прочные пакеты, лидер продаж в Каменске и Батайске.</div>
+                <div class="product-price">135,82 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/plast500.jpg" alt="ПЛАСТ 30×40 1,5гр 500шт"></div>
+              <div class="product-title">ПЛАСТ 30×40 1,5гр 500шт</div>
+              <div class="product-content">
+                <div class="product-desc">Легкие, но прочные — идеальны для магазинов и кафе.</div>
+                <div class="product-price">192,15 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/kasa.jpg" alt="Кассовая лента 57×30 (17м)"></div>
+              <div class="product-title">Кассовая лента 57×30 (17м)</div>
+              <div class="product-content">
+                <div class="product-desc">Востребована повсеместно: от кафе до АЗС. Удобна и экономична.</div>
+                <div class="product-price">16,30 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rk15.jpg" alt="РК 15 внутр. 140×140×81 мм"></div>
+              <div class="product-title">РК 15 внутр. 140×140×81 мм</div>
+              <div class="product-content">
+                <div class="product-desc">Компактный контейнер для порций. Популярен в общепите.</div>
+                <div class="product-price">5,17 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/fa30.jpg" alt="Майка 30×55 7гр черная"></div>
+              <div class="product-title">Майка 30×55 7гр черная</div>
+              <div class="product-content">
+                <div class="product-desc">Высокая прочность, чёрный цвет — универсальный выбор для магазинов.</div>
+                <div class="product-price">99,54 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rk11.jpg" alt="РК 11 Д"></div>
+              <div class="product-title">РК 11 Д</div>
+              <div class="product-content">
+                <div class="product-desc">Высокая крышка — идеально для супов и горячих блюд.</div>
+                <div class="product-price">4,21 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/bmw.jpg" alt="Майка 42×64 БМВ 16гр"></div>
+              <div class="product-title">Майка 42×64 БМВ 16гр</div>
+              <div class="product-content">
+                <div class="product-desc">Максимальная грузоподъёмность — для крупных заказов и оптовых клиентов.</div>
+                <div class="product-price">192,92 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rks350.jpg" alt="РКС-350 Контейнер Комус"></div>
+              <div class="product-title">РКС-350 Контейнер Комус</div>
+              <div class="product-content">
+                <div class="product-desc">Для крупных порций. Любим клиентами из общепита и производства.</div>
+                <div class="product-price">5,03 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/pvh430.jpg" alt="Пленка ПВХ стрейч CLARITY 430*700*9"></div>
+              <div class="product-title">Пленка ПВХ стрейч CLARITY 430*700*9</div>
+              <div class="product-content">
+                <div class="product-desc">Надёжная упаковка для склада и производства. Экономичная и прочная.</div>
+                <div class="product-price">1 252,16 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rks250.jpg" alt="РКС-250 Контейнер Комус"></div>
+              <div class="product-title">РКС-250 Контейнер Комус</div>
+              <div class="product-content">
+                <div class="product-desc">Средний объём — оптимален для кафе и ресторанов.</div>
+                <div class="product-price">4,24 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/zelenka.jpg" alt="Фасовка зеленая 2гр"></div>
+              <div class="product-title">Фасовка зеленая 2гр</div>
+              <div class="product-content">
+                <div class="product-desc">Яркая, прочная — популярна у магазинов и служб доставки.</div>
+                <div class="product-price">48,61 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/vip.jpg" alt="ПЛАСТ 30×40 2гр VIP"></div>
+              <div class="product-title">ПЛАСТ 30×40 2гр VIP</div>
+              <div class="product-content">
+                <div class="product-desc">Премиум-пакеты — для клиентов, ценящих качество и презентабельность.</div>
+                <div class="product-price">135,82 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/prem.jpg" alt='Салфетка "Premer" белая'></div>
+              <div class="product-title">Салфетка "Premer" белая</div>
+              <div class="product-content">
+                <div class="product-desc">Мягкая, впитывающая. Ежедневный расходник в любом заведении.</div>
+                <div class="product-price">314,50 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rk21.jpg" alt="РК 21(М) внутр. 206×130×60 мм"></div>
+              <div class="product-title">РК 21(М) внутр. 206×130×60 мм</div>
+              <div class="product-content">
+                <div class="product-desc">Универсальный размер — подходит для большинства блюд.</div>
+                <div class="product-price">6,91 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/pac23.jpg" alt="Майка 23×43 2,4гр розовая"></div>
+              <div class="product-title">Майка 23×43 2,4гр розовая</div>
+              <div class="product-content">
+                <div class="product-desc">Цветная, легкая — для маленьких заказов и акций.</div>
+                <div class="product-price">67,14 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/city.jpg" alt="НАБОР САЛФЕТОК CITI CLEAN UP"></div>
+              <div class="product-title">НАБОР САЛФЕТОК CITI CLEAN UP</div>
+              <div class="product-content">
+                <div class="product-desc">Практичный набор — для офисов, кафе, школ.</div>
+                <div class="product-price">240,24 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/SL25.jpg" alt="SL-25 М/1"></div>
+              <div class="product-title">SL-25 М/1</div>
+              <div class="product-content">
+                <div class="product-desc">Аналог РК-15 — универсальный контейнер для горячих блюд.</div>
+                <div class="product-price">5,04 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/240.jpg" alt="Мешки д/мусора 240л"></div>
+              <div class="product-title">Мешки д/мусора 240л</div>
+              <div class="product-content">
+                <div class="product-desc">Прочные, для коммерческого использования. От 1 коробки.</div>
+                <div class="product-price">128,10 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/tpk.jpg" alt="Перчатки одноразовые (ТПК)"></div>
+              <div class="product-title">Перчатки одноразовые (ТПК)</div>
+              <div class="product-content">
+                <div class="product-desc">Гигиена на первом месте. От 1 коробки — всегда в наличии.</div>
+                <div class="product-price">23,74 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/riba.jpg" alt="ПЛАСТ 32×40 2,5гр «Рыба-мясо»"></div>
+              <div class="product-title">ПЛАСТ 32×40 2,5гр «Рыба-мясо»</div>
+              <div class="product-content">
+                <div class="product-desc">Специализированные пакеты — для мяса и рыбы. Прочность и герметичность.</div>
+                <div class="product-price">172,08 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/SL39.jpg" alt="SL-39 М"></div>
+              <div class="product-title">SL-39 М</div>
+              <div class="product-content">
+                <div class="product-desc">Аналог РК-21 — для средних порций. Надёжный выбор для кафе.</div>
+                <div class="product-price">12,87 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/m36.jpg" alt="Майка 36×61 12гр"></div>
+              <div class="product-title">Майка 36×61 12гр</div>
+              <div class="product-content">
+                <div class="product-desc">Для крупных заказов — высокая грузоподъёмность.</div>
+                <div class="product-price">148,17 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/gr5.jpg" alt="GraSS Средство для мытья посуды Velly light"></div>
+              <div class="product-title">GraSS Средство для мытья посуды Velly light</div>
+              <div class="product-content">
+                <div class="product-desc">Эффективное, экономичное. Бытовая химия №1 в Ростовской области.</div>
+                <div class="product-price">424,31 ₽ / кг</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/plast1000.jpg" alt="ПЛАСТ 26×35 1,2гр прозрачный"></div>
+              <div class="product-title">ПЛАСТ 26×35 1,2гр прозрачный</div>
+              <div class="product-content">
+                <div class="product-desc">Прозрачные пакеты — удобны для демонстрации товара.</div>
+                <div class="product-price">280,30 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/lux.jpg" alt="Фасовка в рулоне №3 30×40 2,2гр"></div>
+              <div class="product-title">Фасовка в рулоне №3 30×40 2,2гр</div>
+              <div class="product-content">
+                <div class="product-desc">Экономичная упаковка — для магазинов и производств.</div>
+                <div class="product-price">128,10 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rk25.jpg" alt="РК 25КВ(М) внутр. 252×167×81 мм"></div>
+              <div class="product-title">РК 25КВ(М) внутр. 252×167×81 мм</div>
+              <div class="product-content">
+                <div class="product-desc">Для крупных порций — идеален для столовых и производств.</div>
+                <div class="product-price">15,87 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/sl85.jpg" alt="SL-85В (аналог РК-25)"></div>
+              <div class="product-title">SL-85В (аналог РК-25)</div>
+              <div class="product-content">
+                <div class="product-desc">Для крупных порций — идеален для столовых и производств.</div>
+                <div class="product-price">15,41 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/rk80.jpg" alt="РК 80 внутр. 230×165×85 мм"></div>
+              <div class="product-title">РК 80 внутр. 230×165×85 мм</div>
+              <div class="product-content">
+                <div class="product-desc">Термостойкий контейнер с крышкой. Идеален для доставки еды.</div>
+                <div class="product-price">17,50 ₽ / шт</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="product-card-wide">
+              <div class="product-image"><img src="/images/vip.jpg" alt="ПЛАСТ 30×40 2гр VIP (Батайск)"></div>
+              <div class="product-title">ПЛАСТ 30×40 2гр VIP (Бат)</div>
+              <div class="product-content">
+                <div class="product-desc">Премиум-пакеты — для клиентов, ценящих качество и презентабельность.</div>
+                <div class="product-price">89,91 ₽ / уп</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ПРЕИМУЩЕСТВА -->
   <section id="advantages" class="section">
     <div class="container">
@@ -488,29 +926,29 @@
     </div>
   </section>
 
- <!-- КОНТАКТЫ + ФОРМА -->
-<section id="contact" class="section">
-  <div class="container">
-    <h2>Получите прайс прямо сейчас</h2>
-    <p>Оставьте заявку — пришлём актуальный прайс и рассчитаем доставку.</p>
+  <!-- КОНТАКТЫ + ФОРМА -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Получите прайс прямо сейчас</h2>
+      <p>Оставьте заявку — пришлём актуальный прайс и рассчитаем доставку.</p>
 
-    <div style="max-width: 650px; margin: 30px auto 0;">
-      <iframe 
-        src="https://forms.yandex.ru/u/696cbc481f1eb55ec6dbc9e4?iframe=1"
-        frameborder="0"
-        name="ya-form"
-        style="width: 100%; height: 500px; border: none; display: block;"
-        allowfullscreen>
-      </iframe>
+      <div style="max-width: 650px; margin: 30px auto 0;">
+        <iframe 
+          src="https://forms.yandex.ru/u/696cbc481f1eb55ec6dbc9e4?iframe=1"
+          frameborder="0"
+          name="ya-form"
+          style="width: 100%; height: 500px; border: none; display: block;"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
+        Или свяжитесь напрямую:<br>
+        📞 <a href="tel:+79515344480">+79515344480</a><br>
+        📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
+      </p>
     </div>
-
-    <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
-      Или свяжитесь напрямую:<br>
-      📞 <a href="tel:+79515344480">+79515344480</a><br>
-      📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
-    </p>
-  </div>
-</section>
+  </section>
 
   <!-- ФУТЕР -->
   <footer class="footer">
@@ -538,19 +976,51 @@
     <div><img src="https://mc.yandex.ru/watch/106315549" style="position:absolute; left:-9999px;" alt="" /></div>
   </noscript>
   <!-- /Yandex.Metrika counter -->
-   
-   <!-- Плавная прокрутка -->
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Инициализация Swiper -->
   <script>
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          window.scrollTo({
-            top: target.offsetTop - 120,
-            behavior: 'smooth'
-          });
+    document.addEventListener('DOMContentLoaded', () => {
+      const swiper = new Swiper('.top-products-swiper', {
+        loop: true,
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false,
+        },
+        mousewheel: true,
+        freeMode: true,
+        grabCursor: true,
+        simulateTouch: true,
+        breakpoints: {
+          320: { slidesPerView: 1.2, spaceBetween: 16 },
+          480: { slidesPerView: 2, spaceBetween: 20 },
+          768: { slidesPerView: 3, spaceBetween: 24 },
+          1024: { slidesPerView: 4, spaceBetween: 28 },
+          1400: { slidesPerView: 5, spaceBetween: 32 }
         }
+      });
+
+      // Остановка автопрокрутки при наведении
+      const container = document.querySelector('.top-products-swiper');
+      if (container) {
+        container.addEventListener('mouseenter', () => swiper.autoplay.stop());
+        container.addEventListener('mouseleave', () => swiper.autoplay.start());
+      }
+
+      // Плавная прокрутка якорных ссылок
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            window.scrollTo({
+              top: target.offsetTop - 120,
+              behavior: 'smooth'
+            });
+          }
+        });
       });
     });
   </script>
