@@ -930,8 +930,39 @@
   <section id="contact" class="section">
     <div class="container">
       <h2>Получите прайс прямо сейчас</h2>
-      <p>Оставьте заявку — пришлём актуальный прайс и рассчитаем доставку.</p>
+      
+      <!-- Кнопка скачивания прайса (без формы) -->
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="/price.pdf" 
+           onclick="ym(106315549, 'reachGoal', 'price_download'); return true;"
+           class="btn" 
+           style="display: inline-block; background: #2e5d3c; color: white; padding: 14px 32px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(74, 124, 89, 0.25);">
+          📥 Скачать прайс
+        </a>
+        <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+          Все цены открыты — никаких скрытых наценок
+        </p>
+      </div>
 
+      <!-- Разделитель -->
+      <div style="max-width: 600px; margin: 40px auto; text-align: center; position: relative;">
+        <hr style="border: 0; border-top: 1px solid #eaeaea; margin: 0;">
+        <span style="background: white; padding: 0 15px; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); color: #777; font-size: 0.9rem;">
+          или
+        </span>
+      </div>
+
+      <!-- Заголовок формы -->
+      <h3 style="text-align: center; margin-bottom: 20px; color: var(--green); font-weight: 600;">
+        Оставьте заявку — мы свяжемся с вами
+      </h3>
+      
+      <!-- Текст о конфиденциальности -->
+      <p style="text-align: center; max-width: 600px; margin: 0 auto 25px; color: #555; font-size: 0.95rem;">
+        🔒 Ваши данные не передаются третьим лицам. Мы свяжемся только для уточнения деталей заказа.
+      </p>
+
+      <!-- Ваша оригинальная форма (без изменений) -->
       <div style="max-width: 650px; margin: 30px auto 0;">
         <iframe 
           src="https://forms.yandex.ru/u/696cbc481f1eb55ec6dbc9e4?iframe=1"
@@ -940,12 +971,22 @@
           style="width: 100%; height: 500px; border: none; display: block;"
           allowfullscreen>
         </iframe>
+        <noscript>
+          <p style="text-align: center; color: #e74c3c; margin-top: 20px;">
+            🔌 Включите JavaScript для отправки заявки<br>
+            Или напишите нам напрямую: 
+            <a href="https://wa.me/79515344480">WhatsApp</a> / 
+            <a href="https://t.me/yurmani_rostov">Telegram</a>
+          </p>
+        </noscript>
       </div>
 
-      <p style="margin-top: 24px; font-size: 0.95rem; color: #666;">
+      <!-- Альтернативные контакты -->
+      <p style="margin-top: 24px; font-size: 0.95rem; color: #666; text-align: center;">
         Или свяжитесь напрямую:<br>
         📞 <a href="tel:+79515344480">+79515344480</a><br>
-        📧 <a href="mailto:union161@yandex.ru">union161@yandex.ru</a>
+        💬 <a href="https://wa.me/79515344480" target="_blank">WhatsApp</a> | 
+        📱 <a href="https://t.me/yurmani_rostov" target="_blank">Telegram</a>
       </p>
     </div>
   </section>
