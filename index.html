@@ -427,7 +427,10 @@
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
-      flex-grow: 1;
+      overflow: hidden;
+       /* Стандартное свойство (поддерживается с Chrome 118+, Firefox 119+, Safari 17+) */
+      line-clamp: 3;
+
     }
     .product-price {
       margin-top: 10px;
@@ -488,12 +491,14 @@
 	.hero-text-overlay {
   background: rgba(255, 255, 255, 0.88);
   padding: 32px 24px;
-  border-radius:   max-width: 760px;
+  border-radius: 12px;        /* ← исправлено: было "border-radius:   max-width: 760px;" */
+  max-width: 760px;           /* ← вынесено как отдельное свойство */
   margin: 0 auto;
   text-align: center;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 2;
+
 }
 .hero-text-overlay h1,
 .hero-text-overlay .subtitle,
@@ -551,6 +556,7 @@
           <ul>
             <li><a href="#about-products">О компании</a></li>
             <li><a href="#top-products">ТОП-50</a></li>
+			<li><a href="catalog.html">Каталог</a></li>
             <li><a href="#custom-bags">Пакеты с логотипом</a></li>
             <li><a href="#advantages">Преимущества</a></li>
             <li><a href="#delivery">Доставка</a></li>
@@ -1248,5 +1254,6 @@
       });
     });
   </script>
+  
 </body>
 </html>
