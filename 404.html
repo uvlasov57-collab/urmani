@@ -35,14 +35,14 @@
         // Сохраняем полный путь и параметры URL
         const path = window.location.pathname + window.location.search + window.location.hash;
         sessionStorage.setItem('urmani_redirect_path', path);
-        // Перенаправляем на главную
-        window.location.replace('/');
+        // 🔧 ИСПРАВЛЕНО: перенаправляем на catalog.html вместо /
+        window.location.replace('/catalog.html');
     </script>
 </head>
 <body>
     <div class="loader">
         <div class="spinner"></div>
-        <p>Загрузка страницы...</p>
+        <p>Загрузка каталога...</p>
     </div>
 </body>
 </html>
