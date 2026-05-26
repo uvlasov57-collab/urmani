@@ -214,7 +214,7 @@
   width: 200px;
   flex-shrink: 0;
   position: sticky;
-  top: 80px; /* отступ от верхнего края viewport при прокрутке */
+  top: 80px;
   align-self: flex-start;
   height: fit-content;
 }
@@ -270,7 +270,7 @@
 
   .sidebar-filters {
   width: 100%;
-  position: static; /* ← это важно! */
+  position: static;
 }
 
   .sidebar-filters .filters {
@@ -433,6 +433,52 @@
   let allProducts = [];
   let currentProduct = null;
 
+  // 🔹 НОВАЯ ФУНКЦИЯ: Открытие товара по ID
+  function openProductById(productId) {
+    const product = allProducts.find(p => 
+      p.id === productId || 
+      p.name === productId || 
+      p.slug === productId
+    );
+    
+    if (product) {
+      openProductModal(product);
+      return true;
+    }
+    return false;
+  }
+
+  // 🔹 НОВАЯ ФУНКЦИЯ: Обработка прямых ссылок
+  function handleDirectLink() {
+    // 1. Проверяем sessionStorage (редирект из 404.html)
+    const savedPath = sessionStorage.getItem('urmani_redirect_path');
+    if (savedPath) {
+      sessionStorage.removeItem('urmani_redirect_path');
+      // Извлекаем ID из пути: /catalog/PRODUCT-ID или ?product=PRODUCT-ID
+      const match = savedPath.match(/\/catalog\/([^\/\?#]+)|[?&]product=([^&]+)/);
+      const productId = match?.[1] || match?.[2];
+      if (productId) {
+        // Ждём загрузки товаров, если ещё не загружены
+        if (allProducts.length > 0) {
+          openProductById(decodeURIComponent(productId));
+        } else {
+          // Если товары ещё грузятся — обработаем после загрузки
+          window.addEventListener('productsLoaded', () => {
+            openProductById(decodeURIComponent(productId));
+          }, { once: true });
+        }
+        return;
+      }
+    }
+    
+    // 2. Проверяем URL-параметры: ?product=ID или ?id=ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('product') || urlParams.get('id');
+    if (productId && allProducts.length > 0) {
+      openProductById(decodeURIComponent(productId));
+    }
+  }
+
   // Открытие модального окна
   function openProductModal(product) {
     currentProduct = product;
@@ -479,17 +525,27 @@
     `;
 
     document.getElementById('productModal').style.display = 'flex';
+    
+    // 🔹 Обновляем URL без перезагрузки (для красивых ссылок)
+    if (product.id || product.slug) {
+      const productId = product.id || product.slug || product.name;
+      const newUrl = `${window.location.pathname}?product=${encodeURIComponent(productId)}`;
+      window.history.replaceState({}, '', newUrl);
+    }
   }
 
   // Закрытие модального окна
   document.getElementById('closeModal').addEventListener('click', () => {
     document.getElementById('productModal').style.display = 'none';
+    // Очищаем параметр из URL при закрытии
+    window.history.replaceState({}, '', window.location.pathname);
   });
 
   // Закрытие по клику вне контента
   document.getElementById('productModal').addEventListener('click', (e) => {
     if (e.target.id === 'productModal') {
       document.getElementById('productModal').style.display = 'none';
+      window.history.replaceState({}, '', window.location.pathname);
     }
   });
 
@@ -505,6 +561,8 @@
       const card = document.createElement('div');
       card.className = 'product';
       card.style.cursor = 'pointer'; // визуальный сигнал
+      // 🔹 Добавляем data-id для удобного поиска
+      card.dataset.productId = p.id || p.slug || p.name;
       card.innerHTML = `
         <img src="${p.image || placeholder}" alt="${p.name}">
         <div class="category">${p.category || ''}</div>
@@ -557,6 +615,12 @@
       document.getElementById('productSearch').addEventListener('input', applyFilters);
       renderProducts(products);
       document.getElementById('loading').style.display = 'none';
+      
+      // 🔹 Сообщаем, что товары загружены (для обработчика прямых ссылок)
+      window.dispatchEvent(new Event('productsLoaded'));
+      
+      // 🔹 Проверяем прямые ссылки после загрузки данных
+      handleDirectLink();
     })
     .catch(err => {
       document.getElementById('loading').textContent = `Ошибка загрузки: ${err.message}`;
