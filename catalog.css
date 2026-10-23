@@ -18,3 +18,6 @@
 .subsection-card:hover,.subsection-card.active{border-color:#137d62;background:#edf8f3}.subsection-card:focus-visible{outline:3px solid #137d62;outline-offset:2px}
 @media(max-width:1100px){.subsection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.business-sections{padding:14px}.subsection-heading{display:block}.subsection-heading .text-button{margin-top:12px;text-align:left}.subsection-grid{grid-template-columns:1fr}.subsection-card img{width:44px;height:44px}}
+
+/* Explain the contents before opening a business folder. */
+.subsection-card .subsection-description{line-height:1.45;font-size:12px;margin:6px 0;color:#58667b;font-weight:400}.subsection-card>span:not([aria-hidden]){min-width:0}.subsection-card strong{overflow-wrap:anywhere}

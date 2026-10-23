@@ -4,44 +4,19 @@
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money = n => Number(n).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₽';
+  const positions=n=>n+' '+({one:'позиция',few:'позиции',many:'позиций',other:'позиции'}[new Intl.PluralRules('ru').select(n)]);
   const icon = name => `<svg aria-hidden="true"><use href="#i-${name}"/></svg>`;
   const normalize = s => String(s).toLowerCase().replace(/ё/g,'е').replace(/(\d),(\d)/g,'$1.$2').replace(/(\d)\s+(мл|мм|см|мкм|кг|шт|л)(?=\b|[^а-я]|$)/g,'$1$2').replace(/\s+/g,' ').trim();
   const readStore = (key, fallback) => {try {return JSON.parse(localStorage.getItem(key)) ?? fallback;} catch {return fallback;}};
   const writeStore = (key,value) => {try {localStorage.setItem(key,JSON.stringify(value));} catch {}};
-  const presets = {
-    coffee:{title:'Для кофейни',terms:['стакан','крышка','размешив','салфет']},
-    restaurant:{title:'Для кафе и доставки',terms:['контейнер','тарелк','салфет','прибор','перчатк']},
-    shop:{title:'Для магазина',terms:['пакет','фасов','кассовая лента','чековая лента']},
-    bakery:{title:'Для пекарни',terms:['бумага для выпечки','бумага для запекания','мешок кондитер','пакет крафт','форм','салфет']},
-    cleaning:{title:'Для уборки',terms:['средство','мыло','губк','тряпк','салфетк вискоз','салфетк микрофиб','швабр','ведро для','мешки для мусор','мешок для мусор','перчатки хоз','белизна','чистящ','моющ']}
-  };
-  const sections = [
-    ['lids','Крышки',/крышк/],
-    ['cups','Стаканы',/стакан/],
-    ['stirrers','Размешиватели',/размешив/],
-    ['containers','Контейнеры и упаковка',/контейнер|подложк|ланч|салатник|супниц|соусник|тортниц|креманк/],
-    ['plates','Тарелки',/тарелк/],
-    ['cutlery','Приборы',/прибор|(?:^|[^а-я])(?:вилк|ложк|нож(?:и| |$))/],
-    ['napkins','Салфетки',/салфет/],
-    ['gloves','Перчатки',/перчатк/],
-    ['bags','Пакеты и фасовка',/пакет|фасов/],
-    ['till','Кассовая лента',/кассовая лента|чековая лента/],
-    ['baking','Для выпечки и кондитера',/выпечк|запекан|кондитер|форм/],
-    ['soap','Мыло',/мыло/],
-    ['cleaners','Моющие и чистящие средства',/средство|белизна|чистящ|моющ/],
-    ['tools','Инвентарь для уборки',/губк|тряпк|швабр|ведро/],
-    ['waste','Мешки для мусора',/мусор/],
-    ['other','Другие товары',null]
-  ];
-  function sectionKey(p){
-    const name=normalize(p.name);
-    return sections.find(([key,label,pattern])=>pattern?.test(name))?.[0] || 'other';
-  }
-  const sectionTitle = key => sections.find(s=>s[0]===key)?.[1] || '';
+  const business=window.URMANI_BUSINESS;
+  const presets=business.presets;
+  const sectionKey=p=>p._business?.[state.selection]??business.group(p,state.selection);
+  const sectionTitle=key=>business.title(state.selection,key);
   const categoryTitles = {'Контейнера':'Контейнеры','Пакеты/Фасовка':'Пакеты и фасовка','Прочее':'Хозяйственные товары'};
   const categoryTitle = c => categoryTitles[c] || c;
   const params = new URLSearchParams(location.search);
-  const state = {category:params.get('category') || 'all',q:params.get('q') || '',selection:presets[params.get('selection')] ? params.get('selection') : '',group:params.get('group')==='packaging',sort:['price-asc','price-desc','name'].includes(params.get('sort'))?params.get('sort'):'default',min:params.get('min')||'',max:params.get('max')||'',section:params.get('section')||'',facets:{},limit:48};
+  const state = {category:params.get('category') || 'all',q:params.get('q') || '',selection:presets[params.get('selection')] ? params.get('selection') : '',group:params.get('group')==='packaging',sort:['price-asc','price-desc','name'].includes(params.get('sort'))?params.get('sort'):'default',min:params.get('min')||'',max:params.get('max')||'',section:business.resolve(params.get('selection'),params.get('section')||''),facets:{},limit:48};
   let products=[],filtered=[],byKey=new Map(),cart={},recent=[],toastTimer,lastFocus=null,currentKey='',comment='';
   const quantityValue = v => Math.max(1,Math.min(999999,Math.round(Number(v)||1)));
   const productKey = p => String(p._key || p.id || p.slug || p.name);
@@ -84,7 +59,7 @@
   function quantityMarkup(p,value=1,context='card') {
     return `<div class="quantity" data-key="${esc(productKey(p))}" data-context="${context}"><button type="button" data-qty="-1" aria-label="Уменьшить количество: ${esc(p.name)}">−</button><input type="number" min="1" max="999999" step="1" inputmode="numeric" value="${value}" aria-label="Количество: ${esc(p.name)}"><button type="button" data-qty="1" aria-label="Увеличить количество: ${esc(p.name)}">+</button></div>`;
   }
-  function actions(p,context='card'){return `<div class="product-actions">${quantityMarkup(p,1,context)}<button type="button" class="btn btn-primary product-add" data-add="${esc(productKey(p))}">${icon('bag')}В заявку</button></div>`;}
+  function actions(p,context='card'){return `<div class="product-actions">${quantityMarkup(p,1,context)}<button type="button" class="btn btn-primary product-add" data-add="${esc(productKey(p))}">${icon('bag')}В корзину</button></div>`;}
   const productPage = p => window.URMANI_SEO?.products[p.name+'|'+p.image] || 'catalog.html?product='+encodeURIComponent(productKey(p));
   function card(p){
     return `<article class="product" data-product-id="${esc(productKey(p))}"><a class="product-photo" href="${esc(productPage(p))}" data-product="${esc(productKey(p))}" aria-label="Подробнее: ${esc(p.name)}"><img src="${getImage(p)}" alt="${esc(p.name)}" width="400" height="400" loading="lazy" decoding="async"></a><div class="product-body"><div class="category">${esc(categoryTitle(p.category))}</div><h3><a class="product-title" href="${esc(productPage(p))}" data-product="${esc(productKey(p))}" title="${esc(p.name)}">${esc(title(p))}</a></h3><div class="spec-chips">${p._specs.slice(0,3).map(s=>`<span class="spec-chip" title="${esc(s.label)}">${esc(s.value)}</span>`).join('')}</div><div class="price">${money(p.price)}</div><div class="price-caption">Цена по каталогу</div>${actions(p)}</div></article>`;
@@ -106,7 +81,7 @@
   }
   function baseProducts(ignoreSection=false){
     let list=products;
-    if(state.selection)list=list.filter(p=>presets[state.selection].terms.some(t=>normalize(p.name).includes(t)));
+    if(state.selection)list=list.filter(p=>sectionKey(p));
     if(state.group)list=list.filter(p=>['Пакеты/Фасовка','Мусорные мешки'].includes(p.category));
     if(state.category!=='all')list=list.filter(p=>p.category===state.category);
     const terms=normalize(state.q).split(' ').filter(Boolean);
@@ -140,9 +115,14 @@
     box.hidden=!state.selection;
     if(!state.selection){box.innerHTML='';return;}
     const list=baseProducts(true);
-    const groups=sections.map(([key,label])=>({key,label,items:list.filter(p=>sectionKey(p)===key)})).filter(g=>g.items.length);
-    if(state.section && state.section!=='all' && !sections.some(s=>s[0]===state.section))state.section='';
-    box.innerHTML=`<div class="subsection-heading"><div><h3>Что нужно для вашего бизнеса?</h3><p>Откройте подраздел, чтобы сразу перейти к нужным товарам.</p></div><button type="button" class="text-button" data-section="all" aria-pressed="${state.section==='all'}">Все товары подборки (${list.length})</button></div><div class="subsection-grid">${groups.map(g=>`<button type="button" class="subsection-card${state.section===g.key?' active':''}" data-section="${g.key}" aria-pressed="${state.section===g.key}"><img src="${getImage(g.items[0])}" alt="" width="64" height="64" loading="lazy"><span><strong>${esc(g.label)}</strong><small>${g.items.length} позиций</small></span><span aria-hidden="true">→</span></button>`).join('')}</div>`;
+    const groups=business.folders(state.selection).map(folder=>({...folder,items:list.filter(p=>sectionKey(p)===folder.key)})).filter(g=>g.items.length);
+    state.section=business.resolve(state.selection,state.section);
+    const selected=business.folders(state.selection).find(f=>f.key===state.section);
+    if(state.section){
+      box.innerHTML=`<div class="subsection-heading subsection-current"><div><button type="button" class="text-button subsection-back" data-section="">← Все разделы подборки</button><p>${esc(selected?.description||'Весь ассортимент для этого типа бизнеса. Можно уточнить поиск или выбрать раздел.')}</p></div><button type="button" class="text-button" data-section="all" aria-pressed="${state.section==='all'}">Все товары подборки (${list.length})</button></div>`;
+      return;
+    }
+    box.innerHTML=`<div class="subsection-heading"><div><h3>Выберите, что нужно</h3><p>Товары сгруппированы по назначению — откройте нужный раздел.</p></div><button type="button" class="text-button" data-section="all" aria-pressed="false">Все товары подборки (${list.length})</button></div><div class="subsection-grid">${groups.map(g=>`<button type="button" class="subsection-card" data-section="${g.key}" aria-pressed="false"><img src="${getImage(g.items[0])}" alt="" width="64" height="64" loading="lazy"><span><strong>${esc(g.label)}</strong><small class="subsection-description">${esc(g.description)}</small><small>${positions(g.items.length)}</small></span><span aria-hidden="true">→</span></button>`).join('')}</div>`;
   }
   function foldersOnly(){return state.selection && !state.section && !state.q && state.category==='all' && state.min==='' && state.max==='';}
   function renderActive(){
@@ -213,15 +193,14 @@
   }
   function renderCart(focusKey){
     const items=cartItems();const total=updateCartSummary();
-    if(!items.length){$('#cartContent').innerHTML=`<div class="cart-empty">${icon('bag')}<h3>Здесь будет ваш список</h3><p>Выберите количество и нажмите «В заявку»<br>в карточке нужного товара.</p><button type="button" class="btn btn-primary" data-close-dialog>Перейти к выбору</button></div>`;return;}
-    $('#cartContent').innerHTML=`<p class="cart-explanation">Количество укажите в единицах, которые хотите заказать по прайсу. Фасовку и единицы продажи подтвердит менеджер. Расчёт предварительный.</p><div class="cart-lines">${items.map(({p,quantity})=>`<article class="cart-line"><img src="${getImage(p)}" alt="${esc(p.name)}" width="55" height="65"><div><h3>${esc(title(p))}</h3><div class="cart-line-meta">${quantityMarkup(p,quantity,'cart')}<button type="button" class="remove-item" data-remove="${esc(productKey(p))}" aria-label="Убрать из заявки: ${esc(p.name)}">Убрать</button></div></div><div class="cart-line-price">${money(cents(p)*quantity/100)}<small>${money(p.price)} × ${quantity}</small></div></article>`).join('')}</div><div class="cart-summary"><div class="cart-total-row"><span>Предварительная сумма</span><strong>${money(total)}</strong></div><div class="delivery-progress">${total<3000?`До бесплатной доставки ещё <strong>${money(3000-total)}</strong>`:'По предварительному расчёту — доставка бесплатно'}<progress value="${Math.min(total,3000)}" max="3000" aria-label="Сумма до бесплатной доставки"></progress><small>От 3 000 ₽ по Ростову-на-Дону и области. Итоговую сумму и маршрут подтвердит менеджер.</small></div><label class="request-comment">Комментарий к заявке<textarea id="requestComment" maxlength="1000" placeholder="Например: город, нужная дата, уточнения по количеству">${esc(comment)}</textarea></label><button type="button" class="btn btn-primary cart-send" id="sendRequest">Скопировать заявку и открыть MAX ${icon('arrow')}</button><p class="cart-explanation" style="margin:10px 0 0">Скопируем список и откроем профиль Юрмани в MAX. Вставьте текст в сообщение и отправьте менеджеру.</p><div class="cart-tools"><button type="button" class="text-button" id="copyRequest">Скопировать список</button><button type="button" class="text-button" id="downloadRequest">Скачать список .txt</button></div><button type="button" class="cart-clear" id="clearCart">Очистить заявку</button></div>`;
+    if(!items.length){$('#cartContent').innerHTML=`<div class="cart-empty">${icon('bag')}<h3>Здесь будет ваш список</h3><p>Выберите количество и нажмите «В корзину»<br>в карточке нужного товара.</p><button type="button" class="btn btn-primary" data-close-dialog>Перейти к выбору</button></div>`;return;}
+    $('#cartContent').innerHTML=`<p class="cart-explanation">Количество укажите в единицах, которые хотите заказать по прайсу. Фасовку и единицы продажи подтвердит менеджер. Расчёт предварительный.</p><div class="cart-lines">${items.map(({p,quantity})=>`<article class="cart-line"><img src="${getImage(p)}" alt="${esc(p.name)}" width="55" height="65"><div><h3>${esc(title(p))}</h3><div class="cart-line-meta">${quantityMarkup(p,quantity,'cart')}<button type="button" class="remove-item" data-remove="${esc(productKey(p))}" aria-label="Убрать из заявки: ${esc(p.name)}">Убрать</button></div></div><div class="cart-line-price">${money(cents(p)*quantity/100)}<small>${money(p.price)} × ${quantity}</small></div></article>`).join('')}</div><div class="cart-summary"><div class="cart-total-row"><span>Предварительная сумма</span><strong>${money(total)}</strong></div><div class="delivery-progress">${total<3000?`До бесплатной доставки ещё <strong>${money(3000-total)}</strong>`:'По предварительному расчёту — доставка бесплатно'}<progress value="${Math.min(total,3000)}" max="3000" aria-label="Сумма до бесплатной доставки"></progress><small>От 3 000 ₽ по Ростову-на-Дону и области. Итоговую сумму и маршрут подтвердит менеджер.</small></div><label class="request-comment">Комментарий к заявке<textarea id="requestComment" maxlength="1000" placeholder="Например: город, нужная дата, уточнения по количеству">${esc(comment)}</textarea></label><a class="btn btn-primary cart-send" id="checkoutOrder" href="checkout.html">Оформить заказ ${icon('arrow')}</a><p class="cart-explanation" style="margin:10px 0 0">Оставьте контакты на сайте. Заказ сохранится, а менеджер свяжется с вами для подтверждения.</p><div class="cart-tools"><button type="button" class="text-button" id="copyRequest">Скопировать список</button><button type="button" class="text-button" id="downloadRequest">Скачать список .txt</button></div><button type="button" class="cart-clear" id="clearCart">Очистить заявку</button></div>`;
     syncRequestLink();
     if(focusKey){const input=$$('.cart-line .quantity').find(e=>e.dataset.key===focusKey)?.querySelector('input');input?.focus();}
   }
   function syncRequestLink(){
-    const button=$('#sendRequest');if(!button)return;
-    button.nextElementSibling.textContent='Скопируем список и откроем профиль Юрмани в MAX. Нажмите «Написать», вставьте текст в сообщение и отправьте менеджеру.';
-    button.onclick=()=>document.dispatchEvent(new CustomEvent('urmani:max',{detail:{text:requestText(),copyAndOpen:true}}));
+    const link=$('#checkoutOrder');if(!link)return;
+    link.onclick=()=>{try{sessionStorage.setItem('urmani_request_comment_v1',comment);}catch{}};
   }
   function requestText(){const items=cartItems();return 'Здравствуйте! Прошу подтвердить заявку Юрмани:\n\n'+items.map(({p,quantity},i)=>`${i+1}. ${p.name}\nКоличество: ${quantity}; цена по каталогу: ${money(p.price)}; сумма: ${money(cents(p)*quantity/100)}`).join('\n\n')+`\n\nПредварительная сумма: ${money(items.reduce((sum,x)=>sum+cents(x.p)*x.quantity,0)/100)}.\nПрошу уточнить единицы продажи, фасовку, наличие и доставку.`+(comment.trim()?'\n\nКомментарий: '+comment.trim():'');}
   function downloadRequest(){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([requestText()],{type:'text/plain;charset=utf-8'}));a.href=url;a.download='urmani-zayavka.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -230,7 +209,7 @@
   document.addEventListener('click',e=>{
     const target=e.target.closest('button,a');if(!target)return;
     if(target.hasAttribute('data-product')){e.preventDefault();openProductById(target.dataset.product);return;}
-    if(target.hasAttribute('data-add')){const key=target.dataset.add;if(!byKey.has(key))return;const n=quantityValue(target.closest('.product-actions').querySelector('input').value);cart[key]=Math.min(999999,(cart[key]||0)+n);saveCart();toast('Товар добавлен в заявку');target.textContent='Добавлено ✓';setTimeout(()=>{if(target.isConnected)target.innerHTML=icon('bag')+'В заявку';},1200);return;}
+    if(target.hasAttribute('data-add')){const key=target.dataset.add;if(!byKey.has(key))return;const n=quantityValue(target.closest('.product-actions').querySelector('input').value);cart[key]=Math.min(999999,(cart[key]||0)+n);saveCart();toast('Товар добавлен в корзину');target.textContent='Добавлено ✓';setTimeout(()=>{if(target.isConnected)target.innerHTML=icon('bag')+'В корзину';},1200);return;}
     if(target.hasAttribute('data-qty')){const box=target.closest('.quantity');const input=$('input',box);const n=quantityValue(Number(input.value)+Number(target.dataset.qty));if(box.dataset.context==='cart')setCartQuantity(box.dataset.key,n,true);else input.value=n;return;}
     if(target.hasAttribute('data-open-cart')){renderCart();if($('#productModal').open)closeDialog($('#productModal'));openDialog($('#cartModal'));return;}
     if(target.hasAttribute('data-close-dialog')){closeDialog(target.closest('dialog'));return;}
@@ -274,7 +253,7 @@
         if(usedKeys.has(key))key+='::'+p.image;
         if(usedKeys.has(key))key+='::'+i;
         usedKeys.add(key);
-        return {...p,_key:key,_index:i,_specs:specs(p),_search:normalize(p.name)};
+        return {...p,_key:key,_index:i,_specs:specs(p),_search:normalize(p.name),_business:business.membership(p)};
       });
       byKey=new Map(products.map(p=>[productKey(p),p]));
       products.forEach(p=>categoryCounts.set(p.category,(categoryCounts.get(p.category)||0)+1));

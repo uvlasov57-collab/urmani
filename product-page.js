@@ -18,7 +18,7 @@
     const previous=Number(cart[p._key]);
     cart[p._key]=Math.min(999999,(Number.isFinite(previous)&&previous>0?previous:0)+quantity);
     const status=document.querySelector('#seo-add-status');
-    try {localStorage.setItem(storeKey,JSON.stringify(cart));status.textContent='Добавлено в заявку: '+cart[p._key]+'. Откройте заявку для проверки и передачи менеджеру.';updateCount();}
+    try {localStorage.setItem(storeKey,JSON.stringify(cart));status.textContent='Добавлено в корзину: '+cart[p._key]+'. Откройте корзину, чтобы проверить состав и оформить заказ.';updateCount();}
     catch {status.textContent='Браузер запретил сохранение. Откройте каталог с поиском или свяжитесь с менеджером.';}
   });
 })();

@@ -1,0 +1,8 @@
+.git
+.openai
+node_modules
+preview-dist
+.env
+*.sqlite*
+*.db
+**/__pycache__

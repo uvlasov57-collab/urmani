@@ -1,0 +1,16 @@
+
+.env
+*.sqlite*
+*.db
+*.log
+orders-data/
+__pycache__/
+.openai/
+preview-dist/
+package.json
+
+.env.*
+!.env.example
+compose.override.yaml
+Caddyfile.before-*
+backups/

@@ -1,0 +1,12 @@
+{$URMANI_HOST} {
+    request_body {
+        max_size 160KB
+    }
+    reverse_proxy web:8080 {
+        header_up X-Real-IP {remote_host}
+    }
+}
+
+www.xn--80aqkfm7f.xn--p1ai {
+    redir https://xn--80aqkfm7f.xn--p1ai{uri} permanent
+}

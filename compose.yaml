@@ -1,0 +1,37 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      URMANI_DATA_DIR: /var/lib/urmani
+    volumes:
+      - orders:/var/lib/urmani
+    expose:
+      - '8080'
+  mail:
+    build: .
+    restart: unless-stopped
+    profiles: [mail]
+    command: python -m server.manage mail-worker
+    env_file: .env
+    environment:
+      URMANI_DATA_DIR: /var/lib/urmani
+    volumes:
+      - orders:/var/lib/urmani
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - tls:/data
+      - caddy_config:/config
+    depends_on: [web]
+volumes:
+  orders:
+  tls:
+  caddy_config:
