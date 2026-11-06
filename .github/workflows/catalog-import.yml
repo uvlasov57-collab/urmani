@@ -1,0 +1,25 @@
+name: Import approved static catalog
+on:
+  push:
+    branches: [catalog-import-staging]
+    paths: [.github/workflows/catalog-import.yml]
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Verify and import catalog
+        shell: bash
+        run: |
+          echo '7772bb873617a1ff72304083869d954a209ba54ac85227006c47f8d6094fb6c4  catalog.patch.gz' | sha256sum -c -
+          gzip -dc catalog.patch.gz > "$RUNNER_TEMP/catalog.patch"
+          git switch --detach c212563ae1e5ecb9853b34c837d2273ab2dbc576
+          git apply --index "$RUNNER_TEMP/catalog.patch"
+          test "$(git write-tree)" = 8eecdb4ff6acef6f87ba9d17c6b48c0738c3466a
+          git rm --ignore-unmatch CNAME
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Publish static quote catalog'
+          git push --force-with-lease=refs/heads/catalog-no-prices: origin HEAD:refs/heads/catalog-no-prices
