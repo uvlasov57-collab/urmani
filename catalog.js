@@ -3,9 +3,7 @@
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const money = n => Number(n).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₽';
   const positions=n=>n+' '+({one:'позиция',few:'позиции',many:'позиций',other:'позиции'}[new Intl.PluralRules('ru').select(n)]);
-  const icon = name => `<svg aria-hidden="true"><use href="#i-${name}"/></svg>`;
   const normalize = s => String(s).toLowerCase().replace(/ё/g,'е').replace(/(\d),(\d)/g,'$1.$2').replace(/(\d)\s+(мл|мм|см|мкм|кг|шт|л)(?=\b|[^а-я]|$)/g,'$1$2').replace(/\s+/g,' ').trim();
   const readStore = (key, fallback) => {try {return JSON.parse(localStorage.getItem(key)) ?? fallback;} catch {return fallback;}};
   const writeStore = (key,value) => {try {localStorage.setItem(key,JSON.stringify(value));} catch {}};
@@ -16,13 +14,11 @@
   const categoryTitles = {'Контейнера':'Контейнеры','Пакеты/Фасовка':'Пакеты и фасовка','Прочее':'Хозяйственные товары'};
   const categoryTitle = c => categoryTitles[c] || c;
   const params = new URLSearchParams(location.search);
-  const state = {category:params.get('category') || 'all',q:params.get('q') || '',selection:presets[params.get('selection')] ? params.get('selection') : '',group:params.get('group')==='packaging',sort:['price-asc','price-desc','name'].includes(params.get('sort'))?params.get('sort'):'default',min:params.get('min')||'',max:params.get('max')||'',section:business.resolve(params.get('selection'),params.get('section')||''),facets:{},limit:48};
-  let products=[],filtered=[],byKey=new Map(),cart={},recent=[],toastTimer,lastFocus=null,currentKey='',comment='';
-  const quantityValue = v => Math.max(1,Math.min(999999,Math.round(Number(v)||1)));
+  const state = {category:params.get('category') || 'all',q:params.get('q') || '',selection:presets[params.get('selection')] ? params.get('selection') : '',group:params.get('group')==='packaging',sort:['name'].includes(params.get('sort'))?params.get('sort'):'default',section:business.resolve(params.get('selection'),params.get('section')||''),facets:{},limit:48};
+  let products=[],filtered=[],byKey=new Map(),recent=[],toastTimer,lastFocus=null,currentKey='';
   const productKey = p => String(p._key || p.id || p.slug || p.name);
   const getImage = p => esc(p.image || 'placeholder.png');
-  const title = p => p.name.replace(/\s+/g,' ').trim();
-  const cents = p => Math.round(Number(p.price)*100);
+  const title = p => (p.display_name || p.name).replace(/\s+/g,' ').trim();
   const categoryCounts = new Map();
   // Only explicit units are extracted; transport ratios such as 1/50/600 stay in the full name.
   function specs(p) {
@@ -56,13 +52,9 @@
     return list;
   }
   function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),2600);}
-  function quantityMarkup(p,value=1,context='card') {
-    return `<div class="quantity" data-key="${esc(productKey(p))}" data-context="${context}"><button type="button" data-qty="-1" aria-label="Уменьшить количество: ${esc(p.name)}">−</button><input type="number" min="1" max="999999" step="1" inputmode="numeric" value="${value}" aria-label="Количество: ${esc(p.name)}"><button type="button" data-qty="1" aria-label="Увеличить количество: ${esc(p.name)}">+</button></div>`;
-  }
-  function actions(p,context='card'){return `<div class="product-actions">${quantityMarkup(p,1,context)}<button type="button" class="btn btn-primary product-add" data-add="${esc(productKey(p))}">${icon('bag')}В корзину</button></div>`;}
   const productPage = p => window.URMANI_SEO?.products[p.name+'|'+p.image] || 'catalog.html?product='+encodeURIComponent(productKey(p));
   function card(p){
-    return `<article class="product" data-product-id="${esc(productKey(p))}"><a class="product-photo" href="${esc(productPage(p))}" data-product="${esc(productKey(p))}" aria-label="Подробнее: ${esc(p.name)}"><img src="${getImage(p)}" alt="${esc(p.name)}" width="400" height="400" loading="lazy" decoding="async"></a><div class="product-body"><div class="category">${esc(categoryTitle(p.category))}</div><h3><a class="product-title" href="${esc(productPage(p))}" data-product="${esc(productKey(p))}" title="${esc(p.name)}">${esc(title(p))}</a></h3><div class="spec-chips">${p._specs.slice(0,3).map(s=>`<span class="spec-chip" title="${esc(s.label)}">${esc(s.value)}</span>`).join('')}</div><div class="price">${money(p.price)}</div><div class="price-caption">Цена по каталогу</div>${actions(p)}</div></article>`;
+    return `<article class="product" data-product-id="${esc(productKey(p))}"><a class="product-photo" href="${esc(productPage(p))}" data-product="${esc(productKey(p))}" aria-label="Подробнее: ${esc(p.name)}"><img src="${getImage(p)}" alt="${esc(p.name)}" width="400" height="400" loading="lazy" decoding="async"></a><div class="product-body"><div class="category">${esc(categoryTitle(p.category))}</div><h3><a class="product-title" href="${esc(productPage(p))}" data-product="${esc(productKey(p))}" title="${esc(p.name)}">${esc(title(p))}</a></h3><div class="spec-chips">${p._specs.slice(0,3).map(s=>`<span class="spec-chip" title="${esc(s.label)}">${esc(s.value)}</span>`).join('')}</div><a class="btn btn-primary" href="https://max.ru/u/f9LHodD0cOLaHA3tCZoG0DjXYAP4ytX60VM6HWRPrIgbrQ4GWo4Pu-tjIyA" data-quote="${esc(p.name)}">Запросить цену у менеджера</a></div></article>`;
   }
   function updateUrl(){
     const q=new URLSearchParams();
@@ -72,8 +64,6 @@
     if(state.selection && state.section)q.set('section',state.section);
     if(state.group)q.set('group','packaging');
     if(state.sort!=='default')q.set('sort',state.sort);
-    if(state.min!=='')q.set('min',state.min);
-    if(state.max!=='')q.set('max',state.max);
     Object.entries(state.facets).forEach(([k,v])=>{if(v)q.set(k,v);});
     if(currentKey)q.set('product',currentKey);
     history.replaceState({},'',location.pathname+(q.size?'?'+q.toString():''));
@@ -124,7 +114,7 @@
     }
     box.innerHTML=`<div class="subsection-heading"><div><h3>Выберите, что нужно</h3><p>Товары сгруппированы по назначению — откройте нужный раздел.</p></div><button type="button" class="text-button" data-section="all" aria-pressed="false">Все товары подборки (${list.length})</button></div><div class="subsection-grid">${groups.map(g=>`<button type="button" class="subsection-card" data-section="${g.key}" aria-pressed="false"><img src="${getImage(g.items[0])}" alt="" width="64" height="64" loading="lazy"><span><strong>${esc(g.label)}</strong><small class="subsection-description">${esc(g.description)}</small><small>${positions(g.items.length)}</small></span><span aria-hidden="true">→</span></button>`).join('')}</div>`;
   }
-  function foldersOnly(){return state.selection && !state.section && !state.q && state.category==='all' && state.min==='' && state.max==='';}
+  function foldersOnly(){return state.selection && !state.section && !state.q && state.category==='all';}
   function renderActive(){
     const chips=[];
     const chip=(text,key)=>chips.push(`<button type="button" data-remove-filter="${key}" aria-label="Убрать фильтр: ${esc(text)}">${esc(text)}<span aria-hidden="true">×</span></button>`);
@@ -133,8 +123,6 @@
     if(state.group)chip('Пакеты и мешки','group');
     if(state.category!=='all')chip(categoryTitle(state.category),'category');
     if(state.q)chip('Поиск: '+state.q,'q');
-    if(state.min!=='')chip('От '+state.min+' ₽','min');
-    if(state.max!=='')chip('До '+state.max+' ₽','max');
     Object.entries(state.facets).forEach(([k,v])=>{if(v)chip(facetNames[k]+': '+v,k);});
     $('#activeFilters').innerHTML=chips.join('');
     $('#clearSearch').hidden=!state.q;
@@ -157,77 +145,42 @@
     renderSections();
     if(rebuildFacets)renderFacets();
     filtered=baseProducts().filter(p=>{
-      if(state.min!=='' && Number(p.price)<Number(state.min))return false;
-      if(state.max!=='' && Number(p.price)>Number(state.max))return false;
       return Object.entries(state.facets).every(([k,v])=>!v || p._specs.some(s=>s.key===k&&s.value===v));
     });
-    if(state.sort==='price-asc')filtered.sort((a,b)=>a.price-b.price||a._index-b._index);
-    if(state.sort==='price-desc')filtered.sort((a,b)=>b.price-a.price||a._index-b._index);
     if(state.sort==='name')filtered.sort((a,b)=>a.name.localeCompare(b.name,'ru',{numeric:true}));
     $('#resultTitle').textContent=state.selection && state.section && state.section!=='all'?sectionTitle(state.section):state.category!=='all'?categoryTitle(state.category):state.selection?presets[state.selection].title:state.group?'Пакеты и мешки':'Все товары';
     $('#resultCount').textContent=`Найдено: ${filtered.length} · Всего в каталоге: ${products.length}`;
     renderCategories();renderActive();renderProducts();updateUrl();
   }
-  function syncInputs(){ $('#productSearch').value=state.q;$('#priceMin').value=state.min;$('#priceMax').value=state.max;$('#sortSelect').value=state.sort; }
-  function resetFilters(){Object.assign(state,{category:'all',q:'',selection:'',section:'',group:false,min:'',max:'',facets:{},sort:'default'});syncInputs();applyFilters();}
+  function syncInputs(){ $('#productSearch').value=state.q;$('#sortSelect').value=state.sort; }
+  function resetFilters(){Object.assign(state,{category:'all',q:'',selection:'',section:'',group:false,facets:{},sort:'default'});syncInputs();applyFilters();}
   function openDialog(dialog){lastFocus=document.activeElement;if(typeof dialog.showModal==='function')dialog.showModal();else {dialog.setAttribute('open','');dialog.style.display='block';}dialog.querySelector('button')?.focus();}
   function closeDialog(dialog){if(typeof dialog.close==='function')dialog.close();else{dialog.removeAttribute('open');dialog.style.display='';}if(dialog.id==='productModal'){currentKey='';updateUrl();}if(lastFocus?.isConnected)lastFocus.focus();}
   function openProductById(key){
     const p=byKey.get(String(key));if(!p)return false;
     currentKey=productKey(p);
     const details=p._specs.map(s=>`<div><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
-    $('#modalContent').innerHTML=`<div class="modal-layout"><img class="modal-image" src="${getImage(p)}" alt="${esc(p.name)}" width="500" height="500"><div class="modal-copy"><p class="modal-category">${esc(categoryTitle(p.category))}</p><h2 id="productDialogTitle">${esc(title(p))}</h2>${details?`<dl class="spec-list">${details}</dl>`:''}<div class="price">${money(p.price)}</div><p class="price-caption">Цена по каталогу. Единицу продажи, фасовку и наличие уточнит менеджер.</p>${actions(p,'modal')}<p><a class="text-button" href="${esc(productPage(p))}">Открыть страницу товара →</a></p><div class="modal-contact">Нужна помощь с этим товаром?<br><a href="https://max.ru/u/f9LHodD0cOLaHA3tCZoG0DjXYAP4ytX60VM6HWRPrIgbrQ4GWo4Pu-tjIyA" data-max-contact target="_blank" rel="noopener noreferrer">Связаться в MAX ↗</a><a href="tel:+79515344480">Позвонить</a></div></div></div><details class="full-name"><summary>Полное наименование из прайса</summary><p>${esc(p.name)}</p><p>Характеристики выше выделены из наименования. Обозначения транспортной упаковки сохранены без изменения.</p></details>`;
+    $('#modalContent').innerHTML=`<div class="modal-layout"><img class="modal-image" src="${getImage(p)}" alt="${esc(p.name)}" width="500" height="500"><div class="modal-copy"><p class="modal-category">${esc(categoryTitle(p.category))}</p><h2 id="productDialogTitle">${esc(title(p))}</h2>${details?`<dl class="spec-list">${details}</dl>`:''}<a class="btn btn-primary" href="https://max.ru/u/f9LHodD0cOLaHA3tCZoG0DjXYAP4ytX60VM6HWRPrIgbrQ4GWo4Pu-tjIyA" data-quote="${esc(p.name)}">Запросить цену у менеджера</a><p><a class="text-button" href="${esc(productPage(p))}">Открыть страницу товара →</a></p><div class="modal-contact">Нужна помощь с этим товаром?<br><a href="https://max.ru/u/f9LHodD0cOLaHA3tCZoG0DjXYAP4ytX60VM6HWRPrIgbrQ4GWo4Pu-tjIyA" data-max-contact target="_blank" rel="noopener noreferrer">Связаться в MAX ↗</a><a href="tel:+79515344480">Позвонить</a></div></div></div><details class="full-name"><summary>Полное наименование</summary><p>${esc(p.name)}</p><p>Характеристики выше выделены из наименования. Обозначения транспортной упаковки сохранены без изменения.</p></details>`;
     openDialog($('#productModal'));updateUrl();
     recent=[currentKey,...recent.filter(k=>k!==currentKey)].slice(0,6);writeStore('urmani_recent_v1',recent);renderRecent();return true;
   }
   function renderRecent(){
     $('#recentSection').hidden=!recent.length;
-    $('#recentProducts').innerHTML=recent.map(key=>byKey.get(key)).filter(Boolean).map(p=>`<button type="button" class="recent-item" data-product="${esc(productKey(p))}"><img src="${getImage(p)}" alt="${esc(p.name)}" width="160" height="160" loading="lazy"><strong>${esc(title(p))}</strong><span>${money(p.price)}</span></button>`).join('');
+    $('#recentProducts').innerHTML=recent.map(key=>byKey.get(key)).filter(Boolean).map(p=>`<button type="button" class="recent-item" data-product="${esc(productKey(p))}"><img src="${getImage(p)}" alt="${esc(p.name)}" width="160" height="160" loading="lazy"><strong>${esc(title(p))}</strong></button>`).join('');
   }
-  function cartItems(){return Object.entries(cart).filter(([k,q])=>byKey.has(k)&&q>0).map(([key,quantity])=>({p:byKey.get(key),quantity}));}
-  function saveCart(){writeStore('urmani_request_v1',cart);updateCartSummary();}
-  function updateCartSummary(){
-    const items=cartItems();const total=items.reduce((sum,x)=>sum+cents(x.p)*x.quantity,0)/100;
-    $$('.cart-count').forEach(e=>e.textContent=String(items.length));$$('.mobile-total').forEach(e=>e.textContent=money(total));
-    return total;
-  }
-  function renderCart(focusKey){
-    const items=cartItems();const total=updateCartSummary();
-    if(!items.length){$('#cartContent').innerHTML=`<div class="cart-empty">${icon('bag')}<h3>Здесь будет ваш список</h3><p>Выберите количество и нажмите «В корзину»<br>в карточке нужного товара.</p><button type="button" class="btn btn-primary" data-close-dialog>Перейти к выбору</button></div>`;return;}
-    $('#cartContent').innerHTML=`<p class="cart-explanation">Количество укажите в единицах, которые хотите заказать по прайсу. Фасовку и единицы продажи подтвердит менеджер. Расчёт предварительный.</p><div class="cart-lines">${items.map(({p,quantity})=>`<article class="cart-line"><img src="${getImage(p)}" alt="${esc(p.name)}" width="55" height="65"><div><h3>${esc(title(p))}</h3><div class="cart-line-meta">${quantityMarkup(p,quantity,'cart')}<button type="button" class="remove-item" data-remove="${esc(productKey(p))}" aria-label="Убрать из заявки: ${esc(p.name)}">Убрать</button></div></div><div class="cart-line-price">${money(cents(p)*quantity/100)}<small>${money(p.price)} × ${quantity}</small></div></article>`).join('')}</div><div class="cart-summary"><div class="cart-total-row"><span>Предварительная сумма</span><strong>${money(total)}</strong></div><div class="delivery-progress">${total<3000?`До бесплатной доставки ещё <strong>${money(3000-total)}</strong>`:'По предварительному расчёту — доставка бесплатно'}<progress value="${Math.min(total,3000)}" max="3000" aria-label="Сумма до бесплатной доставки"></progress><small>От 3 000 ₽ по Ростову-на-Дону и области. Итоговую сумму и маршрут подтвердит менеджер.</small></div><label class="request-comment">Комментарий к заявке<textarea id="requestComment" maxlength="1000" placeholder="Например: город, нужная дата, уточнения по количеству">${esc(comment)}</textarea></label><a class="btn btn-primary cart-send" id="checkoutOrder" href="checkout.html">Оформить заказ ${icon('arrow')}</a><p class="cart-explanation" style="margin:10px 0 0">Оставьте контакты на сайте. Заказ сохранится, а менеджер свяжется с вами для подтверждения.</p><div class="cart-tools"><button type="button" class="text-button" id="copyRequest">Скопировать список</button><button type="button" class="text-button" id="downloadRequest">Скачать список .txt</button></div><button type="button" class="cart-clear" id="clearCart">Очистить заявку</button></div>`;
-    syncRequestLink();
-    if(focusKey){const input=$$('.cart-line .quantity').find(e=>e.dataset.key===focusKey)?.querySelector('input');input?.focus();}
-  }
-  function syncRequestLink(){
-    const link=$('#checkoutOrder');if(!link)return;
-    link.onclick=()=>{try{sessionStorage.setItem('urmani_request_comment_v1',comment);}catch{}};
-  }
-  function requestText(){const items=cartItems();return 'Здравствуйте! Прошу подтвердить заявку Юрмани:\n\n'+items.map(({p,quantity},i)=>`${i+1}. ${p.name}\nКоличество: ${quantity}; цена по каталогу: ${money(p.price)}; сумма: ${money(cents(p)*quantity/100)}`).join('\n\n')+`\n\nПредварительная сумма: ${money(items.reduce((sum,x)=>sum+cents(x.p)*x.quantity,0)/100)}.\nПрошу уточнить единицы продажи, фасовку, наличие и доставку.`+(comment.trim()?'\n\nКомментарий: '+comment.trim():'');}
-  function downloadRequest(){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([requestText()],{type:'text/plain;charset=utf-8'}));a.href=url;a.download='urmani-zayavka.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-  async function copyRequest(){try {await navigator.clipboard.writeText(requestText());toast('Список скопирован — можно отправить менеджеру');}catch{const ta=document.createElement('textarea');ta.value=requestText();ta.style.cssText='position:fixed;left:-9999px';document.body.append(ta);ta.select();let copied=false;try{copied=document.execCommand('copy');}catch{}ta.remove();if(copied)toast('Список скопирован');else {downloadRequest();toast('Список сохранён в файл для отправки менеджеру');}}}
-  function setCartQuantity(key,value,focus){cart[key]=quantityValue(value);saveCart();renderCart(focus?key:null);}
   document.addEventListener('click',e=>{
     const target=e.target.closest('button,a');if(!target)return;
     if(target.hasAttribute('data-product')){e.preventDefault();openProductById(target.dataset.product);return;}
-    if(target.hasAttribute('data-add')){const key=target.dataset.add;if(!byKey.has(key))return;const n=quantityValue(target.closest('.product-actions').querySelector('input').value);cart[key]=Math.min(999999,(cart[key]||0)+n);saveCart();toast('Товар добавлен в корзину');target.textContent='Добавлено ✓';setTimeout(()=>{if(target.isConnected)target.innerHTML=icon('bag')+'В корзину';},1200);return;}
-    if(target.hasAttribute('data-qty')){const box=target.closest('.quantity');const input=$('input',box);const n=quantityValue(Number(input.value)+Number(target.dataset.qty));if(box.dataset.context==='cart')setCartQuantity(box.dataset.key,n,true);else input.value=n;return;}
-    if(target.hasAttribute('data-open-cart')){renderCart();if($('#productModal').open)closeDialog($('#productModal'));openDialog($('#cartModal'));return;}
     if(target.hasAttribute('data-close-dialog')){closeDialog(target.closest('dialog'));return;}
-    if(target.hasAttribute('data-remove')){delete cart[target.dataset.remove];saveCart();renderCart();return;}
     if(target.hasAttribute('data-category')){state.category=target.dataset.category;state.selection='';state.section='';state.group=false;state.facets={};applyFilters();return;}
     if(target.hasAttribute('data-section')){state.section=target.dataset.section;state.facets={};applyFilters();return;}
-    if(target.hasAttribute('data-selection')){state.section='';state.q='';state.min='';state.max='';syncInputs();state.selection=state.selection===target.dataset.selection?'':target.dataset.selection;state.category='all';state.group=false;state.facets={};applyFilters();return;}
+    if(target.hasAttribute('data-selection')){state.section='';state.q='';syncInputs();state.selection=state.selection===target.dataset.selection?'':target.dataset.selection;state.category='all';state.group=false;state.facets={};applyFilters();return;}
     if(target.hasAttribute('data-remove-filter')){const k=target.dataset.removeFilter;if(k==='selection'){state.selection='';state.section='';}else if(k==='category'){state.category='all';state.facets={};}else if(k==='group')state.group=false;else if(k in state.facets)delete state.facets[k];else state[k]='';syncInputs();applyFilters();return;}
     if(target.hasAttribute('data-reset')||target.id==='resetFilters'){resetFilters();return;}
-    if(target.id==='clearCart'){cart={};saveCart();renderCart();toast('Заявка очищена');return;}
-    if(target.id==='copyRequest'){copyRequest();return;}
-    if(target.id==='downloadRequest'){downloadRequest();return;}
   });
   document.addEventListener('change',e=>{
-    if(e.target.matches('.quantity input')){const box=e.target.closest('.quantity');const n=quantityValue(e.target.value);e.target.value=n;if(box.dataset.context==='cart')setCartQuantity(box.dataset.key,n,true);}
     if(e.target.matches('[data-facet]')){state.facets[e.target.dataset.facet]=e.target.value;applyFilters(false);}
   });
-  document.addEventListener('input',e=>{if(e.target.id==='requestComment'){comment=e.target.value;syncRequestLink();}});
   document.addEventListener('error',e=>{if(e.target.tagName==='IMG'&&!e.target.src.endsWith('/placeholder.png'))e.target.src='placeholder.png';},true);
   $$('dialog').forEach(dialog=>{
     dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeDialog(dialog);}});
@@ -237,7 +190,6 @@
   $('#productSearch').addEventListener('input',()=>{state.q=$('#productSearch').value.trim();applyFilters();});
   $('#clearSearch').addEventListener('click',()=>{state.q='';syncInputs();applyFilters();$('#productSearch').focus();});
   $('#sortSelect').addEventListener('change',()=>{state.sort=$('#sortSelect').value;applyFilters(false);});
-  for(const [id,key] of [['priceMin','min'],['priceMax','max']])$('#'+id).addEventListener('input',()=>{const value=$('#'+id).value;state[key]=value!==''&&Number(value)>=0?value:'';applyFilters(false);});
   $('#loadMore').addEventListener('click',()=>{const oldCount=$$('.product').length;state.limit+=48;renderProducts(true);$$('.product')[oldCount]?.querySelector('button')?.focus({preventScroll:true});});
   function setFiltersOpen(open){$('#filterPanel').classList.toggle('is-open',open);$('#toggleFilters').setAttribute('aria-expanded',String(open));if(open)$('#filterPanel').scrollIntoView?.({behavior:'smooth',block:'start'});else $('#toggleFilters').focus();}
   $('#toggleFilters').addEventListener('click',()=>setFiltersOpen(!$('#filterPanel').classList.contains('is-open')));
@@ -260,16 +212,13 @@
       const sorted=[...categoryCounts].sort((a,b)=>categoryTitle(a[0]).localeCompare(categoryTitle(b[0]),'ru'));categoryCounts.clear();sorted.forEach(([c,n])=>categoryCounts.set(c,n));
       if(state.category!=='all'&&!categoryCounts.has(state.category))state.category='all';
       for(const k of facetKeys())if(params.get(k))state.facets[k]=params.get(k);
-      for(const k of ['min','max'])if(state[k]!==''&&(!Number.isFinite(Number(state[k]))||Number(state[k])<0))state[k]='';
-      const stored=readStore('urmani_request_v1',{});if(stored&&typeof stored==='object'&&!Array.isArray(stored))for(const [key,value] of Object.entries(stored))if(byKey.has(key)&&Number.isFinite(Number(value))&&Number(value)>0)cart[key]=quantityValue(value);
       const viewed=readStore('urmani_recent_v1',[]);recent=Array.isArray(viewed)?[...new Set(viewed.filter(k=>byKey.has(k)))].slice(0,6):[];
-      syncInputs();applyFilters();updateCartSummary();renderRecent();$('#loading').hidden=true;
-      if(params.get('request')==='1'){renderCart();openDialog($('#cartModal'));}
+      syncInputs();applyFilters();renderRecent();$('#loading').hidden=true;
       let key=params.get('product')||params.get('id');
       try {const saved=sessionStorage.getItem('urmani_redirect_path');if(saved){sessionStorage.removeItem('urmani_redirect_path');const match=saved.match(/\/catalog\/([^/?#]+)|[?&]product=([^&]+)/);if(match)key=decodeURIComponent(match[1]||match[2]);}}catch{}
       if(key&&!openProductById(key))toast('Товар по этой ссылке не найден. Попробуйте поиск.');
       window.dispatchEvent(new Event('productsLoaded'));
-    }catch(err){$('#loading').innerHTML='<strong>Не удалось загрузить каталог</strong><p>Проверьте соединение и попробуйте ещё раз. При локальном открытии запустите START-WINDOWS.cmd.</p><button type="button" class="btn btn-primary" id="retryLoad">Повторить</button> <a class="btn btn-outline" href="price.pdf">Скачать прайс</a>';$('#resultCount').textContent='Каталог временно недоступен';$('#retryLoad').addEventListener('click',load,{once:true});}
+    }catch(err){$('#loading').innerHTML='<strong>Не удалось загрузить каталог</strong><p>Проверьте соединение и попробуйте ещё раз.</p><button type="button" class="btn btn-primary" id="retryLoad">Повторить</button>';$('#resultCount').textContent='Каталог временно недоступен';$('#retryLoad').addEventListener('click',load,{once:true});}
   }
   load();
 })();
