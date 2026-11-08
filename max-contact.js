@@ -42,8 +42,10 @@
     const link = event.target.closest('a[data-quote]');
     if (!link || typeof dialog.showModal !== 'function') return;
     event.preventDefault();
+    // Opening the request form is not an outbound MAX click.
+    event.stopImmediatePropagation();
     open('Здравствуйте! Подскажите, пожалуйста, цену и наличие товара:\n' + link.dataset.quote);
-  });
+  }, true);
   dialog.querySelector('.max-close').onclick = () => dialog.close();
   dialog.addEventListener('close', () => trigger?.focus());
   dialog.querySelector('[data-copy-phone]').onclick = () => copy('+79515344480', 'Номер скопирован');
