@@ -15,25 +15,3 @@
     sessionStorage.setItem(key,JSON.stringify(value));
   }catch{}
 })();
-
-
-(() => {
-  'use strict';
-  const siteHosts = ['xn--80aqkfm7f.xn--p1ai', 'юрмани.рф'];
-  // The home page already initializes this counter in its HTML.
-  if (!siteHosts.includes(location.hostname) || typeof window.ym === 'function') return;
-
-  const metrika = window.ym = function () {
-    (metrika.a ||= []).push(arguments);
-  };
-  metrika.l = Date.now();
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://mc.yandex.ru/metrika/tag.js';
-  metrika(106315549, 'init', {
-    clickmap: true,
-    trackLinks: true,
-    accurateTrackBounce: true
-  });
-  document.head.appendChild(script);
-})();
