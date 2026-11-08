@@ -38,14 +38,28 @@
     const copied = await copyText(text);
     status.textContent = copied ? message : 'Не удалось скопировать автоматически. Выделите текст и скопируйте вручную.';
   }
-  window.addEventListener('click', event => {
+  function markQuoteLinks(root) {
+    if (!(root instanceof Element)) return;
+    if (root.matches('a[data-quote]')) root.setAttribute('href', '#max-contact');
+    for (const link of root.querySelectorAll('a[data-quote]')) {
+      link.setAttribute('href', '#max-contact');
+    }
+  }
+  if (typeof dialog.showModal === 'function') {
+    // Only the link inside the form should be counted as an outbound MAX click.
+    markQuoteLinks(document.body);
+    new MutationObserver(records => {
+      for (const record of records) {
+        for (const node of record.addedNodes) markQuoteLinks(node);
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+  document.addEventListener('click', event => {
     const link = event.target.closest('a[data-quote]');
     if (!link || typeof dialog.showModal !== 'function') return;
     event.preventDefault();
-    // Opening the request form is not an outbound MAX click.
-    event.stopImmediatePropagation();
     open('Здравствуйте! Подскажите, пожалуйста, цену и наличие товара:\n' + link.dataset.quote);
-  }, true);
+  });
   dialog.querySelector('.max-close').onclick = () => dialog.close();
   dialog.addEventListener('close', () => trigger?.focus());
   dialog.querySelector('[data-copy-phone]').onclick = () => copy('+79515344480', 'Номер скопирован');
