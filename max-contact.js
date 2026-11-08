@@ -49,3 +49,25 @@
   dialog.querySelector('[data-copy-phone]').onclick = () => copy('+79515344480', 'Номер скопирован');
   dialog.querySelector('[data-copy-request]').onclick = () => copy(dialog.querySelector('textarea').value, 'Заявка скопирована. Вставьте её в чат и отправьте менеджеру.');
 })();
+
+
+(() => {
+  'use strict';
+  const siteHosts = ['xn--80aqkfm7f.xn--p1ai', 'юрмани.рф'];
+  // The home page already initializes this counter in its HTML.
+  if (!siteHosts.includes(location.hostname) || typeof window.ym === 'function') return;
+
+  const metrika = window.ym = function () {
+    (metrika.a ||= []).push(arguments);
+  };
+  metrika.l = Date.now();
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://mc.yandex.ru/metrika/tag.js';
+  metrika(106315549, 'init', {
+    clickmap: true,
+    trackLinks: true,
+    accurateTrackBounce: true
+  });
+  document.head.appendChild(script);
+})();
