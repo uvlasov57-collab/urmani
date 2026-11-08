@@ -38,7 +38,7 @@
     const copied = await copyText(text);
     status.textContent = copied ? message : 'Не удалось скопировать автоматически. Выделите текст и скопируйте вручную.';
   }
-  document.addEventListener('click', event => {
+  window.addEventListener('click', event => {
     const link = event.target.closest('a[data-quote]');
     if (!link || typeof dialog.showModal !== 'function') return;
     event.preventDefault();
