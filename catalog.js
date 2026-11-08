@@ -66,8 +66,11 @@
     if(state.sort!=='default')q.set('sort',state.sort);
     Object.entries(state.facets).forEach(([k,v])=>{if(v)q.set(k,v);});
     if(currentKey)q.set('product',currentKey);
-    history.replaceState({},'',location.pathname+(q.size?'?'+q.toString():''));
     let robots=$('meta[name=robots]');if(!robots){robots=document.createElement('meta');robots.name='robots';document.head.append(robots);}robots.content=q.size?'noindex,follow':'index,follow';
+    for (const [key, value] of params) {
+      if (key.startsWith('utm_') || key === 'yclid' || key === '_ym_debug') q.append(key, value);
+    }
+    history.replaceState({}, '', location.pathname + (q.size ? '?' + q.toString() : '') + location.hash);
   }
   function baseProducts(ignoreSection=false){
     let list=products;
